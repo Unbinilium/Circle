@@ -1,6 +1,6 @@
 ## Circle
 
-An simple FIFO ringbuffer written using C++
+An simple FIFO ringbuffer written using C++:
 ```cpp
 template<typename T, int64_t capacity> class ringbuffer
 ```
