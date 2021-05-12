@@ -14,13 +14,13 @@
 #include <type_traits>
 
 namespace ubn {
-    template<typename T, const size_t capacity>
+    template<typename T, const std::size_t capacity>
     class ringbuffer {
     public:
         /*
          * @brief: Initialize ringbuffer class
          * @param: typename, the typename of item(s) for ringbuffer to store
-         * @param: const size_t, the capacity of ringbuffer, overwrites the old item(s) when pushing if ringbuffer is full
+         * @param: const std::size_t, the capacity of ringbuffer, overwrites the old item(s) when pushing if ringbuffer is full
          */
         constexpr inline ringbuffer(void) {
             static_assert(capacity >= 1UL, "ringbuffer capacity < 1");
@@ -57,9 +57,9 @@ namespace ubn {
         
         /*
          * @brief:  Get current catchable item counts from ringbuffer
-         * @return: size_t, the current catchable item counts from ringbuffer
+         * @return: std::size_t, the current catchable item counts from ringbuffer
          */
-        constexpr inline size_t size(void) noexcept {
+        constexpr inline std::size_t size(void) noexcept {
             return capacity - m_capacity;
         }
         
@@ -93,8 +93,8 @@ namespace ubn {
         }
         
     private:
-        T      m_buffer   [ capacity + 1 ];
-        size_t m_capacity { capacity };
-        size_t m_position { 0 };
+        T           m_buffer   [ capacity + 1 ];
+        std::size_t m_capacity { capacity };
+        std::size_t m_position { 0 };
     };
 }
