@@ -24,36 +24,20 @@ template<typename T, int64_t capacity> class ringbuffer
     <summary>Click to view examples 👇</summary>
 
 ```cpp
-#include <thread>
-#include <ranges>
 #include <iostream>
 
-#include "include/queue.hpp"
+#include "ringbuffer.hpp"
 
 int main() {
-    ubn::queue<int> q;
-    std::jthread t[] = {
-        std::jthread([&]() {
-            for (auto i : std::views::iota(0, 10))
-                std::cout << "thr1: poll <- " << q.poll() << "\n";
-        }),
-        std::jthread([&]() {
-            for (auto i : std::views::iota(0, 10))
-                std::cout << "thr2: poll <- " << q.poll() << "\n";
-        }),
-        std::jthread([&]() {
-            for (auto i : std::views::iota(0, 10)) {
-                std::cout << "thr3: push -> " << i << "\n";
-                q.push(i);
-            }
-        }),
-        std::jthread([&]() {
-            for (auto i : std::views::iota(0, 10)) {
-                std::cout << "thr4: push -> " << i << "\n";
-                q.push(i);
-            }
-        })
-    };
+    ubn::ringbuffer<size_t, 4> rb;
+
+    for(size_t i = 1; i != 10; ++i) {
+        if (rb.push_head(i)) {
+            std::cout << "get tail from filled ringbuffer " << rb.catch_tail()<< " while pusing -> " << i << std::endl;
+        } else {
+            std::cout << "waiting ringbuffer to be filled -> " << i << std::endl;
+        }
+    }
 }
 ```
 </details>
