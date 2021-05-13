@@ -26,7 +26,7 @@ namespace ubn {
             static_assert(capacity >= 1UL, "ringbuffer capacity < 1");
         }
         
-        /* @brief: Destrutor ringbuffer */
+        /* @brief: Destrutor of ringbuffer */
         inline ~ringbuffer(void) noexcept {
             delete[] p_buffer;
         }
