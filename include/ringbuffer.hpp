@@ -35,7 +35,6 @@ namespace ubn {
          * @brief: non-copyable and non-movable
          * @param: const ringbuffer&
          */
-        constexpr inline ringbuffer           (const ringbuffer&) = delete;
         constexpr inline ringbuffer &operator=(const ringbuffer&) = delete;
         
         /*
