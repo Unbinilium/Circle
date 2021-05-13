@@ -32,37 +32,37 @@ namespace ubn {
         }
         
         /*
-         * @brief: non-copyable and non-movable
+         * @brief: Let ringbuffer non-copyable and non-movable
          * @param: const ringbuffer&
          */
         constexpr inline ringbuffer &operator=(const ringbuffer&) = delete;
         
         /*
-         * @brief:  Pushing an new item on ringbuffer head, return if it overwrites an item
+         * @brief:  Pushing an new item to ringbuffer, return if it overwrites an item
          * @param:  const T&, const lvalue reference of typename T
          * @return: bool, whether you're pushing on a full ringbuffer which performs the overwrite action on an old item
          */
-        constexpr inline bool push_head(const T& __v) noexcept {
+        constexpr inline bool emplace(const T& __v) noexcept {
             p_buffer[m_position++ % capacity] = __v;
             return is_overwrite();
         }
         
         /*
-         * @brief:  Pushing an new item on ringbuffer head, return if it overwrites an item
+         * @brief:  Pushing an new item to ringbuffer, return if it overwrites an item
          * @param:  T&&, rvalue reference of typename T
          * @return: bool, whether you're pushing on a full ringbuffer which performs the overwrite action on an old item
          */
         template<typename T_ = T>
-        constexpr inline bool push_head(T&& __v, typename std::enable_if<!std::is_reference<T_>::value, std::nullptr_t>::type = nullptr) noexcept {
+        constexpr inline bool emplace(T&& __v, typename std::enable_if<!std::is_reference<T_>::value, std::nullptr_t>::type = nullptr) noexcept {
             p_buffer[m_position++ % capacity] = std::forward<T>(__v);
             return is_overwrite();
         }
         
         /*
-         * @brief:  Get an item from ringbuffer tail, return the default initialized type T if ringbuffer is empty, and keeps the buffer in the ringbuffer if there had no overwrite action has been performed
+         * @brief:  Get an item from ringbuffer, return the default initialized type T if ringbuffer is empty, and keeps the buffer in the ringbuffer if there had no overwrite action has been performed
          * @return: T, the item from ringbuffer tail or the default initialed type T if ringbuffer is empty
          */
-        constexpr inline T catch_tail(void) noexcept {
+        constexpr inline T pull(void) noexcept {
             return p_buffer[is_empty() ? capacity : (m_position + m_capacity++ - capacity) % capacity];
         }
         
@@ -79,7 +79,7 @@ namespace ubn {
          * @return: bool
          */
         constexpr inline bool is_empty(void) noexcept {
-            return m_capacity != capacity ? false : true;
+            return !(m_capacity != capacity);
         }
         
         /*
@@ -91,20 +91,20 @@ namespace ubn {
         }
         
         /*
-         * @brief: Empty all buffer(s) inside ringbuffer, not free the memory, only reset the ringbuffers pointer position
+         * @brief: Reset all buffer(s) inside ringbuffer, not free the memory, only reset the ringbuffers pointer position
          */
-        constexpr inline void empty(void) noexcept {
+        constexpr inline void reset(void) noexcept {
             m_capacity = capacity;
             m_position = 0;
         }
         
     protected:
         constexpr inline bool is_overwrite(void) noexcept {
-            return (m_capacity ? --m_capacity : 0) ? false : true;
+            return (m_capacity ? --m_capacity : false) ? false : true;
         }
         
     private:
-        T*          p_buffer   { new T[capacity + 1] };
+        T*          p_buffer   { new T[capacity + 1]{} };
         std::size_t m_capacity { capacity };
         std::size_t m_position { 0 };
     };
