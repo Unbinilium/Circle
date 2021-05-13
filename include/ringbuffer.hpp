@@ -64,7 +64,7 @@ namespace ubn {
          * @return: T, the item from ringbuffer tail or the default initialed type T if ringbuffer is empty
          */
         constexpr inline T catch_tail(void) noexcept {
-            return p_buffer[is_empty() ? capacity : (m_position + (m_capacity != capacity ? m_capacity++ : capacity) - capacity) % capacity];
+            return p_buffer[is_empty() ? capacity : (m_position + m_capacity++ - capacity) % capacity];
         }
         
         /*
